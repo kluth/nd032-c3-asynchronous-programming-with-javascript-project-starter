@@ -5,7 +5,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "node src/server/index.js"
+    "start": "node src/server/index.js",
+    "api": "ORIGIN_ALLOWED=http://localhost:3000 ./bin/server-linux"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
