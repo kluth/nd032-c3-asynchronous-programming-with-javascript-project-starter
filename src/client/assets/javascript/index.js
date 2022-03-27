@@ -7,6 +7,22 @@ var store = {
   race_id: undefined,
 };
 
+const nicknames = {
+  'Racer 1': 'Sandra',
+  'Racer 2': 'Lara',
+  'Racer 3': 'Emma',
+  'Racer 4': 'Melina',
+  'Racer 5': 'Elena'
+};
+
+const locations = {
+  "Track 1": "Kitchen",
+  "Track 2": "Livingroom",
+  "Track 3": "Library",
+  "Track 4": "Bathroom",
+  "Track 5": "Kids room",
+  "Track 6": "Garden"
+};
 
 document.addEventListener("DOMContentLoaded", function () {
   onPageLoad();
@@ -36,15 +52,13 @@ function setupClickHandlers() {
     function (event) {
       const { target } = event;
 
-      
-      if (target.matches(".card.track") || target.parentNode.matches('.card.track')) {
+      if (target.matches(".card.track")) {
         handleSelectTrack(target);
       }
 
       
       if (
-        target.matches(".card.podracer") ||
-        target.parentNode.matches(".card.podracer")
+        target.matches(".card.podracer")
       ) {
         handleSelectPodRacer(target);
       }
@@ -58,8 +72,7 @@ function setupClickHandlers() {
       }
 
       
-      if (target.id === "gas-peddle") {
-        console.log('brumm brumm');
+      if (target.matches("#gas-peddle")) {
         handleAccelerate();
       }
     },
@@ -124,8 +137,6 @@ async function runRace(raceID) {
           return race;
         }).then((raceData) => {
         if(raceData.status === 'in-progress') {
-         
-          console.log("Running ");
           renderAt("#leaderBoard", raceProgress(raceData.positions));
         }
         if (raceData.status === 'finished') {
@@ -242,7 +253,7 @@ function renderRacerCard(racer) {
 
   return `
 		<li class="card podracer" id="${id}">
-			<h3>${driver_name}</h3>
+			<h3>${nicknames[driver_name]}</h3>
 			<p>${top_speed}</p>
 			<p>${acceleration}</p>
 			<p>${handling}</p>
@@ -271,7 +282,7 @@ function renderTrackCard(track) {
 
   return `
 		<li id="${id}" class="card track">
-			<h3>${name}</h3>
+			<h3>${locations[name]}</h3>
 		</li>
 	`;
 }
@@ -286,7 +297,7 @@ function renderCountdown(count) {
 function renderRaceStartView(track, racers) {
   return `
 		<header>
-			<h1>Race: ${track.name}</h1>
+			<h1>Race: ${locations[track.name]}</h1>
 		</header>
 		<main id="two-columns">
 			<section id="leaderBoard">
@@ -322,22 +333,15 @@ function raceProgress(positions) {
     let result = e.id == store.player_id;
     return result;
   });
-  if(!userPlayer.driver_name.includes(' (you)')) {
-    userPlayer.driver_name += " (you)";
-  }
 
-  console.log('Before!!!')
-  console.table(positions)
   let new_positions = positions.sort((a, b) => (a.segment - b.segment));
-  console.log('After!!!')
-  console.table(new_positions);
   let count = 1;
 
   const results = new_positions.map((p) => {
     return `
 			<tr>
 				<td>
-					<h3>${count++} - ${p.driver_name}</h3>
+					<h3>${count++} - ${nicknames[p.driver_name]} ${userPlayer.driver_name === p.driver_name ? '(you)' : ''}</h3>
 				</td>
 			</tr>
 		`;
@@ -363,7 +367,7 @@ function renderAt(element, html) {
 
 
 
-const SERVER = "http:
+const SERVER = "http://localhost:8000";
 
 function defaultFetchOpts() {
   return {
